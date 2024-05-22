@@ -61,6 +61,48 @@ private function configureErrorLogging() {
     }
 
 
+    /**
+     * テキストの埋め込みを取得するメソッド
+     * @param string $text 埋め込みを取得するテキスト
+     * @return array 埋め込みベクトル
+     */
+    private function getEmbedding($text) {
+        $url = 'https://api.openai.com/v1/embeddings';
+        $data = [
+            'input' => $text,
+            'model' => 'text-embedding-ada-002',
+        ];
+        $options = [
+            'http' => [
+                'header'  => "Content-Type: application/json\r\nAuthorization: Bearer " . $this->apiKey . "\r\n",
+                'method'  => 'POST',
+                'content' => json_encode($data),
+            ],
+        ];
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+        if ($result === FALSE) {
+            throw new Exception('埋め込みの取得に失敗しました。');
+        }
+        $response = json_decode($result, true);
+        return $response['data'][0]['embedding'];
+    }
+
+    /**
+     * コサイン類似度を計算するメソッド
+     * @param array $vecA ベクトルA
+     * @param array $vecB ベクトルB
+     * @return float 類似度
+     */
+    private function cosineSimilarity($vecA, $vecB) {
+        $dotProduct = array_sum(array_map(function($a, $b) { return $a * $b; }, $vecA, $vecB));
+        $magnitudeA = sqrt(array_sum(array_map(function($a) { return $a * $a; }, $vecA)));
+        $magnitudeB = sqrt(array_sum(array_map(function($a) { return $a * $a; }, $vecB)));
+        return $dotProduct / ($magnitudeA * $magnitudeB);
+    }
+
+
+
 
     /**
      * OpenAI APIリクエストを送信するメソッド
@@ -68,23 +110,33 @@ private function configureErrorLogging() {
      * @return string APIからの応答メッセージ
      * @throws Exception APIリクエストまたは応答に失敗した場合
      */
-public function sendRequest($text) {
-    $microCMSData = $this->fetchMicroCMSData();
-    // $system_rule = "aaa";
-    $system_rule = $microCMSData;
-    // $system_rule = $microCMSData['rule'] . $microCMSData['content'];
+    public function sendRequest($text) {
+        $microCMSData = $this->fetchMicroCMSData();
+        $system_rule = $microCMSData;
 
-    // APIリクエストデータの設定
-    $data = [
-        'model' => 'gpt-4o',
-        'messages' => [
-            ['role' => 'system', 'content' => $system_rule],
-            ['role' => 'user', 'content' => $text]
-        ],
-        'max_tokens' => 500,
-        'presence_penalty' => 2.0,
-        'frequency_penalty' => 2.0,
-    ];
+        // クエリとシステムルールの埋め込みを取得
+        $queryEmbedding = $this->getEmbedding($text);
+        $systemEmbedding = $this->getEmbedding($system_rule['content']);
+    file_put_contents('../../log/return.log', $systemEmbedding); 
+
+        // 類似度を計算
+        $similarity = $this->cosineSimilarity($queryEmbedding, $systemEmbedding);
+
+        // 類似度に基づいてGPTからの応答を生成
+        $prompt = "The similarity between the user query and system rule is: " . $similarity . ". Based on this, generate a response.";
+
+        // GPT APIリクエストデータの設定
+        $data = [
+            'model' => 'gpt-4o',
+            'messages' => [
+                ['role' => 'system', 'content' => $system_rule],
+                ['role' => 'user', 'content' => $text],
+                ['role' => 'assistant', 'content' => $prompt]
+            ],
+            'max_tokens' => 500,
+            'presence_penalty' => 2.0,
+            'frequency_penalty' => 2.0,
+        ];
 
         // HTTPリクエストのオプション設定
         $options = [
