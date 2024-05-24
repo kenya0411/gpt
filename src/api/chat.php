@@ -117,7 +117,7 @@ private function configureErrorLogging() {
         // クエリとシステムルールの埋め込みを取得
         $queryEmbedding = $this->getEmbedding($text);
         $systemEmbedding = $this->getEmbedding($system_rule['content']);
-    file_put_contents('../../log/return.log', $systemEmbedding); 
+    file_put_contents('../../log/return.log', $system_rule['content']); 
 
         // 類似度を計算
         $similarity = $this->cosineSimilarity($queryEmbedding, $systemEmbedding);
@@ -127,7 +127,7 @@ private function configureErrorLogging() {
 
         // GPT APIリクエストデータの設定
         $data = [
-            'model' => 'gpt-4o',
+            'model' => 'gpt-4',
             'messages' => [
                 ['role' => 'system', 'content' => $system_rule],
                 ['role' => 'user', 'content' => $text],
