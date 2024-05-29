@@ -400,6 +400,55 @@
             "install-path": "../guzzlehttp/psr7"
         },
         {
+            "name": "microcmsio/microcms-php-sdk",
+            "version": "v1.0.1",
+            "version_normalized": "1.0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/microcmsio/microcms-php-sdk.git",
+                "reference": "a007e273b687633be77502af5c1c6bb88c7e2581"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/microcmsio/microcms-php-sdk/zipball/a007e273b687633be77502af5c1c6bb88c7e2581",
+                "reference": "a007e273b687633be77502af5c1c6bb88c7e2581",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^7.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12.99",
+                "phpunit/phpunit": "^9.5",
+                "psy/psysh": "@stable"
+            },
+            "time": "2021-11-05T05:03:23+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Microcms\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "microCMS",
+                    "homepage": "https://github.com/microcmsio/microcms-php-sdk/contributors"
+                }
+            ],
+            "description": "microCMS PHP SDK",
+            "support": {
+                "issues": "https://github.com/microcmsio/microcms-php-sdk/issues",
+                "source": "https://github.com/microcmsio/microcms-php-sdk/tree/v1.0.1"
+            },
+            "install-path": "../microcmsio/microcms-php-sdk"
+        },
+        {
             "name": "nyholm/psr7",
             "version": "1.8.1",
             "version_normalized": "1.8.1.0",

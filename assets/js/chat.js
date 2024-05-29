@@ -3,12 +3,13 @@
     fetch('./src/api/fetch_microcms_data.php?type=img')
         .then(response => response.json())
         .then(data => {
-            const botPhotoUrl = data.img.url || 'https://riversun.github.io/chatbot/bot_icon_operator.png';
+            // const botPhotoUrl = data.img.url || 'https://riversun.github.io/chatbot/bot_icon_operator.png';
+            const botPhotoUrl = 'https://riversun.github.io/chatbot/bot_icon_operator.png';
 
             const initParam = {
                 renderMode: 'auto',
                 api: {
-                    endpoint: './src/api/chat.php',
+                    endpoint: './src/api/test2.php',
                     method: 'GET',
                     dataType: 'jsonp'
                 },
