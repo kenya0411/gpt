@@ -34,7 +34,7 @@ $microcmsClient = new MicrocmsClient(
 $response = $microcmsClient->list("chatbot");
 
 
-file_put_contents('../../log/return.log', print_r($response, true));
+// file_put_contents('../../log/return.log', print_r($response, true));
 
 
 $jsonData = json_encode($response);
@@ -92,6 +92,8 @@ function openai($user_question){
     $client = OpenAI::client($yourApiKey);
     $logFile = __DIR__ . '/../../log/embeddings.log';
     $embeddingsData = read_embeddings_from_log($logFile);
+
+
 	// ユーザーの質問の埋め込みを取得
 $response = $client->embeddings()->create([
     'model' => 'text-embedding-3-small',
@@ -125,12 +127,14 @@ foreach ($embeddingsData as $data) {
     $normA = sqrt($normA);
     $normB = sqrt($normB);
     $cosineSimilarity = $dotProduct / ($normA * $normB);
-
+        // コサイン類似度の計算結果をログに出力
+        // error_log("Cosine similarity with '{$data['text']}': {$cosineSimilarity}");
     if ($cosineSimilarity > $best_score) {
         $best_score = $cosineSimilarity;
         $best_match = $data['text'];
     }
 }
+// file_put_contents('../../log/return.log', print_r($best_score, true));
 
     if ($best_score < 0.5) {
         $system_message = "ユーザーからの質問に対して関連する社内データが見つかりませんでした。その旨を正直に答えてください。";
