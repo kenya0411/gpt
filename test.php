@@ -1,7 +1,7 @@
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
+        error_log('Error embedding content: ');
 require_once __DIR__ . '/vendor/autoload.php';
 use \Microcms\Client;
 
