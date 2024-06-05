@@ -16,8 +16,6 @@ use GuzzleHttp\Client as GuzzleClient;
 use Microcms\Client as MicrocmsClient;
 
 
-
-
 // Guzzle HTTPクライアントのインスタンスを作成し、SSL検証を無視する設定
 $guzzleClient = new GuzzleClient([
     'verify' => false // SSL証明書の検証を無視
@@ -218,6 +216,7 @@ $callback = isset($_GET['callback']) ? filter_var($_GET['callback'], FILTER_SANI
 
 // $output = "aaa";
 $output = openai($text);
+
 // 改行コードの挿入 (<br> タグ)
 $output = nl2br($output);
 
