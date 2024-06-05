@@ -1,35 +1,28 @@
-    const chatux = new ChatUx();
-    // Fetch the bot photo from MicroCMS data
-    fetch('./src/api/fetch_microcms_data.php?type=img')
-        .then(response => response.json())
-        .then(data => {
-            // const botPhotoUrl = data.img.url || 'https://riversun.github.io/chatbot/bot_icon_operator.png';
-            const botPhotoUrl = 'https://riversun.github.io/chatbot/bot_icon_operator.png';
+const chatux = new ChatUx();
 
-            const initParam = {
-                renderMode: 'auto',
-                api: {
-                    endpoint: './src/api/test2.php',
-                    method: 'GET',
-                    dataType: 'jsonp'
-                },
-                bot: {
-                    botPhoto: botPhotoUrl,
-                    humanPhoto: null,
-                    widget: {
-                        sendLabel: '送信',
-                        placeHolder: '何か話しかけてみてください'
-                    }
-                },
-                window: {
-                    title: 'チャットボット',
-                    infoUrl: 'https://github.com/riversun/chatux'
-                }
-            };
+// 画像URLを直接指定
+const botPhotoUrl = 'https://riversun.github.io/chatbot/bot_icon_operator.png'; // または任意の画像URL
 
-            chatux.init(initParam);
-            chatux.start(true);
-        })
-        .catch(error => {
-            console.error('Error fetching bot photo URL:', error);
-        });
+const initParam = {
+  renderMode: 'auto',
+  api: {
+    endpoint: './src/api/chat.php',
+    method: 'GET',
+    dataType: 'jsonp'
+  },
+  bot: {
+    botPhoto: botPhotoUrl, // 指定した画像URLを使用
+    humanPhoto: null,
+    widget: {
+      sendLabel: '送信',
+      placeHolder: '何か話しかけてみてください'
+    }
+  },
+  window: {
+    title: 'チャットボット',
+    infoUrl: 'https://github.com/riversun/chatux'
+  }
+};
+
+chatux.init(initParam);
+chatux.start(true);

@@ -5,3 +5,5 @@ log/return.log
 /log/_notes
 /_notes
 .env
+log/best_match.log
+log/embeddings.log

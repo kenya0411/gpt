@@ -1,403 +1,240 @@
-<?php
-header('Content-Type: application/json; charset=UTF-8');
+<?php 
 
-/**
- * OpenAiHandler クラス
- * OpenAI APIとのやり取りを行うクラス
- */
-class OpenAiHandler {
-    private $apiKey;
-    private $apiUrl = 'https://api.openai.com/v1/chat/completions';
-    private $guzzleClient;
-    private $microcmsClient;
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-    /**
-     * コンストラクタ
-     * @param string $configPath 設定ファイルのパス
-     */
-    public function __construct($configPath) {
 
-        require_once __DIR__ . '/../../vendor/autoload.php';
-        
-        // Load environment variables
-        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-        $dotenv->load();
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
 
-        // Guzzle HTTPクライアントのインスタンスを作成し、SSL検証を無視する設定
-        $this->guzzleClient = new GuzzleHttp\Client([
-            'verify' => false // SSL証明書の検証を無視
+
+$yourApiKey = $_ENV['OPEN_AI_API_KEY'] ?? 'API key not found';
+
+$openaiClient = OpenAI::client($yourApiKey);
+
+
+use GuzzleHttp\Client as GuzzleClient;
+use Microcms\Client as MicrocmsClient;
+
+
+
+
+// Guzzle HTTPクライアントのインスタンスを作成し、SSL検証を無視する設定
+$guzzleClient = new GuzzleClient([
+    'verify' => false // SSL証明書の検証を無視
+]);
+
+// MicroCMSクライアントのインスタンスを作成
+$microcmsClient = new MicrocmsClient(
+    $_ENV['MICROCMS_DOMAIN'],  // サービスドメイン
+    $_ENV['MICROCMS_API_KEY'], // APIキー
+    $guzzleClient              // カスタムGuzzleクライアントを使用
+);
+
+// 特定のエンドポイントからデータを取得
+$response = $microcmsClient->list("chatbot");
+
+
+// file_put_contents('../../log/return.log', print_r($response, true));
+
+
+$jsonData = json_encode($response);
+
+$data = json_decode($jsonData, true);
+
+$embeddings = [];
+
+// コンテンツのEmbeddingを取得
+foreach ($data['contents'] as $content) {
+    $text_to_embed = $content['content'] . ' ' . $content['title']; // titleも追加
+    // categoryがある場合は追加
+    if (isset($content['category'])) {
+        $text_to_embed .= ' ' . $content['category'];
+    }
+    try {
+        $response = $openaiClient->embeddings()->create([
+            'model' => 'text-embedding-3-small',
+            'input' => $text_to_embed
         ]);
 
-        // MicroCMSクライアントのインスタンスを作成
-        $this->microcmsClient = new Microcms\Client(
-            $_ENV['MICROCMS_DOMAIN'],  // サービスドメイン
-            $_ENV['MICROCMS_API_KEY'], // APIキー
-            $this->guzzleClient              // カスタムGuzzleクライアントを使用
-        );
-
-
-        // 設定ファイルからAPIキーを読み込む
-        $config = include($configPath);
-        $this->apiKey = $config['openai_api_key'];
-        
-        // エラーログ設定を行う
-        $this->configureErrorLogging();
+        if (isset($response->embeddings[0]->embedding)) {
+            $embeddings[$content['id']] = [
+                'embedding' => $response->embeddings[0]->embedding,
+                'content' => $content['content'],
+                'title' => $content['title'], // titleも保存
+                'category' => $content['category'] ?? null // categoryも保存
+            ];
+        } else {
+            // エンベディングが取得できなかった場合のログ
+            error_log('No embedding data for content ID: ' . $content['id']);
+        }
+    } catch (\Exception $e) {
+        // エラーハンドリング: エラーをログに記録
+        error_log('Error embedding content: ' . $e->getMessage());
     }
+}
 
-/**
- * エラーログ設定を行うメソッド
- */
-private function configureErrorLogging() {
-    ini_set('display_errors', 1); // 変更: エラーメッセージを表示
-    ini_set('display_startup_errors', 1); // 変更: スタートアップエラーを表示
-    error_reporting(E_ALL);
-    ini_set('log_errors', 1);
-    ini_set('error_log', __DIR__ . '/log/error_log.log'); // エラーログファイルのパス
+
+// Embedding結果をログファイルに保存
+$logFile = __DIR__ . '/../../log/embeddings.log';
+$result = file_put_contents($logFile, json_encode($embeddings));
+if ($result === false) {
+    error_log("Failed to write embeddings to log file: {$logFile}");
 }
 
 
 
-    /**
-     * MicroCMSからデータを取得するメソッド
-     * @return array 取得したデータ
-     * @throws Exception データの取得またはパースに失敗した場合
-     */
-    private function fetchMicroCMSData($endpoint) {
 
-    file_put_contents('../../log/return.log', "応答生成成功: " . "aaaa" . "\n");
+function read_embeddings_from_log($filename) {
+    $content = file_get_contents($filename);
+    $data = json_decode($content, true);
 
-        // 特定のエンドポイントからデータを取得
-        $response = $this->microcmsClient->list("chatbot");
-    file_put_contents('../../log/return.log', "応答生成成功: " . $response . "\n");
+    return $data ?? [];
+}
 
-        return $response->getBody()->getContents(); // レスポンスボディの内容を返す
 
-    // // fetch_microcms_data.php を実行し、その出力をバッファに保存
-    // ob_start();
-    // include './fetch_microcms_data.php';
-    // $response = ob_get_clean();
-    // // file_put_contents('return.log', $response); 
-    // // file_put_contents('../../log/return.log', $response); 
 
-    //     if ($response === FALSE) {
-    //         throw new Exception('MicroCMSデータの取得に失敗しました。');
-    //     }
 
-    //     $data = json_decode($response, true);
-    //     if (json_last_error() !== JSON_ERROR_NONE) {
-    //         throw new Exception('MicroCMSデータのパースに失敗しました: ' . json_last_error_msg());
-    //     }
+function openai($user_question) {
+    $yourApiKey = $_ENV['OPEN_AI_API_KEY'] ?? 'API key not found';
+    $client = OpenAI::client($yourApiKey);
+    $logFile = __DIR__ . '/../../log/embeddings.log';
+    $embeddingsData = read_embeddings_from_log($logFile);
 
-    //     return $data;
+    // ユーザーの質問の埋め込みを取得
+    $response = $client->embeddings()->create([
+        'model' => 'text-embedding-3-small',
+        'input' => $user_question
+    ]);
+    $question_embedding = $response->embeddings[0]->embedding;
+
+    $best_score = 0;
+    $best_match = "";
+    $best_match_title = ""; // 類似度が最も高いコンテンツのタイトルも保存
+
+    foreach ($embeddingsData as $id => $data) {
+        $text_embedding = $data['embedding'];
+        $text_content = $data['content'];
+        $text_title = $data['title'];
+
+        // タイトルの埋め込みを取得
+        $title_embedding_response = $client->embeddings()->create([
+            'model' => 'text-embedding-3-small',
+            'input' => $text_title
+        ]);
+        $title_embedding = $title_embedding_response->embeddings[0]->embedding;
+
+        // タイトルと質問の類似度計算
+        $title_similarity = calculateCosineSimilarity($question_embedding, $title_embedding);
+
+        // コンテンツと質問の類似度計算
+        $content_similarity = calculateCosineSimilarity($question_embedding, $text_embedding);
+
+        // 類似度の計算 (タイトルが類似している場合、タイトルの重みを大きくする)
+        $similarity = ($title_similarity > 0.7)
+            ? ($title_similarity * 0.6 + $content_similarity * 0.4) // タイトルの重みを大きくする
+            : $content_similarity; // タイトルの類似度が低い場合はコンテンツの類似度のみ
+
+        // 類似度が高い場合に best_score, best_match, best_match_title を更新
+        // if ($similarity > $best_score) {
+        //     $best_score = $similarity;
+        //     $best_match = $text_content;
+        //     $best_match_title = $text_title;
+        // }
+            // 類似度計算結果を一時保存
+        $similarities[$id] = $similarity;
+
+
     }
+    // 最も類似度が高いコンテンツを決定
+    $best_match_id = array_search(max($similarities), $similarities);
+    $best_score = $similarities[$best_match_id];
+    $best_match = $embeddingsData[$best_match_id]['content'];
+    $best_match_title = $embeddingsData[$best_match_id]['title'];
+file_put_contents('../../log/best_match.log', $best_score);
 
-
-//     /**
-//      * テキストの埋め込みを取得するメソッド
-//      * @param string $text 埋め込みを取得するテキスト
-//      * @return array 埋め込みベクトル
-//      */
-//     private function getEmbedding($text) {
-//         $url = 'https://api.openai.com/v1/embeddings';
-//         $data = [
-//             'input' => $text,
-//             'model' => 'text-embedding-ada-002',
-//         ];
-//         $options = [
-//             'http' => [
-//                 'header'  => "Content-Type: application/json\r\nAuthorization: Bearer " . $this->apiKey . "\r\n",
-//                 'method'  => 'POST',
-//                 'content' => json_encode($data),
-//             ],
-//         ];
-//         $context = stream_context_create($options);
-//         $result = file_get_contents($url, false, $context);
-//         if ($result === FALSE) {
-//             throw new Exception('埋め込みの取得に失敗しました。');
-//         }
-//         $response = json_decode($result, true);
-//         return $response['data'][0]['embedding'];
-//     }
-
-//     /**
-//      * コサイン類似度を計算するメソッド
-//      * @param array $vecA ベクトルA
-//      * @param array $vecB ベクトルB
-//      * @return float 類似度
-//      */
-//     private function cosineSimilarity($vecA, $vecB) {
-//         $dotProduct = array_sum(array_map(function($a, $b) { return $a * $b; }, $vecA, $vecB));
-//         $magnitudeA = sqrt(array_sum(array_map(function($a) { return $a * $a; }, $vecA)));
-//         $magnitudeB = sqrt(array_sum(array_map(function($a) { return $a * $a; }, $vecB)));
-//         return $dotProduct / ($magnitudeA * $magnitudeB);
-//     }
-// public function sendRequest($text) {
-//     // MicroCMSからデータを取得
-//     try {
-//         $lStepDetails = $this->fetchMicroCMSData();
-//         file_put_contents('../../log/return.log', "MicroCMSデータ取得成功\n", FILE_APPEND);
-//     } catch (Exception $e) {
-//         file_put_contents('../../log/return.log', "データ取得エラー: " . $e->getMessage() . "\n", FILE_APPEND);
-//         return "エラー: データ取得に失敗しました。";
-//     }
-
-//     // ユーザーのクエリの埋め込みを取得
-//     try {
-//         $queryEmbedding = $this->getEmbedding($text);
-//     } catch (Exception $e) {
-//         file_put_contents('../../log/return.log', "クエリ埋め込みエラー: " . $e->getMessage() . "\n", FILE_APPEND);
-//         return "エラー: クエリ埋め込みの取得に失敗しました。";
-//     }
-
-//     $highestSimilarity = -1;
-//     $mostRelevantSection = null;
-
-//     // Lステップの各セクションに対して類似度を計算
-//     foreach ($lStepDetails as $section) {
-//         try {
-//             $sectionEmbedding = $this->getEmbedding($section['content']);
-//             $similarity = $this->cosineSimilarity($queryEmbedding, $sectionEmbedding);
-//             file_put_contents('../../log/return.log', "類似度計算成功: 類似度=" . $similarity . "\n", FILE_APPEND);
-//         } catch (Exception $e) {
-//             file_put_contents('../../log/return.log', "類似度計算エラー: " . $e->getMessage() . "\n", FILE_APPEND);
-//             continue; // エラーがあればそのセクションをスキップ
-//         }
-
-//         // 最も類似度が高いセクションを選択
-//         if ($similarity > $highestSimilarity) {
-//             $highestSimilarity = $similarity;
-//             $mostRelevantSection = $section;
-//         }
-//     }
-
-//     if ($mostRelevantSection === null) {
-//         file_put_contents('../../log/return.log', "適切なセクションが見つかりませんでした。\n", FILE_APPEND);
-//         return "関連するセクションが見つかりませんでした。";
-//     }
-
-//     // 関連するセクションの内容を基に応答を生成
-//     $response = "Lステップの詳細に関して: " . $mostRelevantSection['content'];
-//     file_put_contents('../../log/return.log', "応答生成成功: " . $response . "\n", FILE_APPEND);
-//     return $response;
-// }
-
-
-
-// public function sendRequest($text) {
-//     // MicroCMSからデータを取得
-//     try {
-//         $lStepDetails = $this->fetchMicroCMSData();
-//         file_put_contents('../../log/return.log', "MicroCMSデータ取得成功\n", FILE_APPEND);
-//     } catch (Exception $e) {
-//         error_log("データ取得エラー: " . $e->getMessage());
-//         file_put_contents('../../log/return.log', "データ取得エラー: " . $e->getMessage() . "\n", FILE_APPEND);
-//         throw new Exception('MicroCMSデータの取得に失敗しました。');
-//     }
-
-//     // ユーザーのクエリの埋め込みを取得
-//     try {
-//         $queryEmbedding = $this->getEmbedding($text);
-//         file_put_contents('../../log/return.log', "埋め込み取得成功\n", FILE_APPEND);
-//     } catch (Exception $e) {
-//         error_log("埋め込み取得エラー: " . $e->getMessage());
-//         file_put_contents('../../log/return.log', "埋め込み取得エラー: " . $e->getMessage() . "\n", FILE_APPEND);
-//         throw new Exception('埋め込みの取得に失敗しました。');
-//     }
-
-//     $highestSimilarity = -1;
-//     $mostRelevantSection = null;
-
-//     // Lステップの各セクションに対して類似度を計算
-//     foreach ($lStepDetails as $section) {
-//         try {
-//             $sectionEmbedding = $this->getEmbedding($section['content']);
-//             $similarity = $this->cosineSimilarity($queryEmbedding, $sectionEmbedding);
-//             file_put_contents('../../log/return.log', "類似度計算成功: 類似度=" . $similarity . "\n", FILE_APPEND);
-//         } catch (Exception $e) {
-//             error_log("類似度計算エラー: " . $e->getMessage());
-//             file_put_contents('../../log/return.log', "類似度計算エラー: " . $e->getMessage() . "\n", FILE_APPEND);
-//             continue; // エラーがあればそのセクションをスキップ
-//         }
-
-//         // 最も類似度が高いセクションを選択
-//         // if ($similarity > $highestSimilarity) {
-//         //     $highestSimilarity = $similarity;
-//         //     $mostRelevantSection = $section;
-//         // }
-//     }
-
-//     // if ($mostRelevantSection === null) {
-//     //     error_log("適切なセクションが見つかりませんでした。");
-//     //     file_put_contents('../../log/return.log', "適切なセクションが見つかりませんでした。\n", FILE_APPEND);
-//     //     throw new Exception('関連するセクションが見つかりませんでした。');
-//     // }
-
-//     // // 関連するセクションの内容を基に応答を生成
-//     // $response = "Lステップの詳細に関して: " . $mostRelevantSection['content'];
-//     // file_put_contents('../../log/return.log', "応答生成成功: " . $response . "\n", FILE_APPEND);
-//     return "こんにちは";
-//     // return $response;
-// }
-
-// public function sendRequest($text) {
-//     // MicroCMSからデータを取得
-//     $lStepDetails = $this->fetchMicroCMSData();
-
-//     // ユーザーのクエリの埋め込みを取得
-//     $queryEmbedding = $this->getEmbedding($text);
-//     file_put_contents('../../log/return.log', "aaa"); 
-
-//     $highestSimilarity = -1;
-//     $mostRelevantSection = null;
-
-//     // Lステップの各セクションに対して類似度を計算
-//     foreach ($lStepDetails as $section) {
-//         $sectionEmbedding = $this->getEmbedding($section['content']);
-//         $similarity = $this->cosineSimilarity($queryEmbedding, $sectionEmbedding);
-
-//         // 最も類似度が高いセクションを選択
-//         if ($similarity > $highestSimilarity) {
-//             $highestSimilarity = $similarity;
-//             $mostRelevantSection = $section;
-//         }
-//     }
-//     file_put_contents('../../log/return.log', "eeee"); 
-//     file_put_contents('../../log/return.log', $mostRelevantSection); 
-
-//     if ($mostRelevantSection === null) {
-//     file_put_contents('../../log/return.log', "関連するセクションが見つかりませんでした。"); 
-
-//         throw new Exception('関連するセクションが見つかりませんでした。');
-//     }
-
-//     // 関連するセクションの内容を基に応答を生成
-//     $response = "Lステップの詳細に関して: " . $mostRelevantSection['content'];
-
-//     return $response;
-// }
-
-
-
-    /**
-     * OpenAI APIリクエストを送信するメソッド
-     * @param string $text ユーザーからの入力テキスト
-     * @return string APIからの応答メッセージ
-     * @throws Exception APIリクエストまたは応答に失敗した場合
-     */
-    public function sendRequest($text) {
-        $microCMSData = $this->fetchMicroCMSData("chatbot");
-        $system_rule = $microCMSData;
-
-        // クエリとシステムルールの埋め込みを取得
-    //     $queryEmbedding = $this->getEmbedding($text);
-    //     $systemEmbedding = $this->getEmbedding($system_rule['content']);
-    // file_put_contents('../../log/return.log', $system_rule['content']); 
-
-        // 類似度を計算
-        // $similarity = $this->cosineSimilarity($queryEmbedding, $systemEmbedding);
-
-        // 類似度に基づいてGPTからの応答を生成
-        // $prompt = "The similarity between the user query and system rule is: " . $similarity . ". Based on this, generate a response.";
-
-        // GPT APIリクエストデータの設定
-        $data = [
-            'model' => 'gpt-4o',
+    // GPT-3.5-turboへの問い合わせ
+    if ($best_score < 0.3) {
+        $system_message = "あなたはチャットボットです。ユーザーからの質問に対して関連する社内データが見つかりませんでした。その旨を正直に答えてください。";
+        $gpt_response = $client->chat()->create([
+            'model' => 'gpt-3.5-turbo',
             'messages' => [
-                // ['role' => 'system', 'content' => $system_rule],
-                ['role' => 'user', 'content' => $text],
+                ['role' => 'system', 'content' => $system_message],
+                ['role' => 'user', 'content' => $user_question]
             ],
-            'max_tokens' => 500,
-            'presence_penalty' => 2.0,
-            'frequency_penalty' => 2.0,
-        ];
-
-        // HTTPリクエストのオプション設定
-        $options = [
-            'http' => [
-                'header' => "Content-Type: application/json\r\n" .
-                            "Authorization: Bearer " . $this->apiKey . "\r\n",
-                'method' => 'POST',
-                'content' => json_encode($data),
+            'max_tokens' => 150, 
+        ]);
+    } else {
+        $system_message = "あなたはLステップに関する専門のチャットボットです。
+        以下の質問と関連性の高い情報に基づいて、追加の解説や詳細を含めず、元の情報のみを使用して最適な回答をしてください。
+        適度に改行等を使って読みやすく出力してください。
+        丁寧語で文章は作成してください。
+        質問に対する回答を生成する際、提供した情報のみを用いてください。関連性のない情報は100%追加しないようお願いします。
+        最大で300文字程度にしてください。";
+        $gpt_response = $client->chat()->create([
+            // 'model' => 'gpt-4o',
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                ['role' => 'system', 'content' => $system_message . "■関連性の高い情報：" . $best_match_title . "\n" . $best_match],
+                ['role' => 'user', 'content' => $user_question],
             ],
-        ];
+            // 'max_tokens' => 150, 
+        ]);
+    }
+file_put_contents('../../log/return.log', $gpt_response->choices[0]->message->content);
 
-        // コンテキストの作成とAPIリクエストの送信
-        $context = stream_context_create($options);
-        $result = file_get_contents($this->apiUrl, false, $context);
+    return $gpt_response->choices[0]->message->content;
+}
 
-        // APIリクエストの結果をチェック
-        if ($result === FALSE) {
-            throw new Exception('APIリクエストに失敗しました。');
-        }
+// コサイン類似度計算関数
+function calculateCosineSimilarity($vec1, $vec2) {
+    $dotProduct = 0;
+    $normA = 0;
+    $normB = 0;
 
-        // API応答をデコード
-        $responseData = json_decode($result, true);
-        if (!isset($responseData['choices'][0]['message']['content'])) {
-            throw new Exception('API応答に失敗しました: ' . json_encode($responseData));
-        }
-
-        return "あああ";
-        // return $responseData['choices'][0]['message']['content'];
+    for ($i = 0; $i < count($vec1); $i++) {
+        $dotProduct += $vec1[$i] * $vec2[$i];
+        $normA += pow($vec1[$i], 2);
+        $normB += pow($vec2[$i], 2);
     }
 
-
-
-
-    /**
-     * エラーハンドリングを行うメソッド
-     * @param Exception $e キャッチした例外
-     * @return string ユーザーへのエラーメッセージ
-     */
-    public function handleError($e) { // 修正: private から public に変更
-        // エラーメッセージをログに記録
-        error_log($e->getMessage());
-        // ユーザーへのエラーメッセージを返す
-        return 'エラーが発生しました。ご質問がございましたらお問い合わせください';
+    $normA = sqrt($normA);
+    $normB = sqrt($normB);
+    
+    // ゼロ除算を防ぐ
+    if ($normA == 0 || $normB == 0) {
+        return 0;
     }
 
+    return $dotProduct / ($normA * $normB);
+}
 
-    /**
-     * API応答の処理を行うメソッド
-     * @param string $output APIからの応答メッセージ
-     * @param string $callback コールバック関数名 (オプション)
-     */
-    public function createResponse($output, $callback = '') {
-        // 応答データの作成
-        $response = [
-            'output' => [
-                [
-                    'type' => 'text',
-                    'value' => trim($output)
-                ]
-            ]
-        ];
+$text = isset($_GET['text']) ? filter_var($_GET['text'], FILTER_SANITIZE_STRING) : '';
+
+
+$user_question = "次の会議はいつ？";
+
+
+$callback = isset($_GET['callback']) ? filter_var($_GET['callback'], FILTER_SANITIZE_STRING) : '';
+
+// $output = "aaa";
+$output = openai($text);
+// 改行コードの挿入 (<br> タグ)
+$output = nl2br($output);
+
+$response = [
+	'output' => [
+		[
+			'type' => 'text',
+			'value' => trim($output)
+		]
+	]
+];
 
         // JSONP形式で応答する場合
-        if ($callback) {
-            echo $callback . '(' . json_encode($response) . ')';
-        } else {
+if ($callback) {
+	echo $callback . '(' . json_encode($response) . ')';
+} else {
             // 通常のJSON形式で応答する場合
-            echo json_encode($response);
-        }
-    }
+	echo json_encode($response);
 }
-
-// メイン処理
-try {
-    // OpenAiHandlerクラスのインスタンスを作成
-    $handler = new OpenAiHandler('../config/config.php');
-
-    // ユーザー入力の検証
-    $text = isset($_GET['text']) ? filter_var($_GET['text'], FILTER_SANITIZE_STRING) : '';
-    $callback = isset($_GET['callback']) ? filter_var($_GET['callback'], FILTER_SANITIZE_STRING) : '';
-
-    // OpenAI APIにリクエストを送信
-    $chatGptOutput = $handler->sendRequest($text);
-} catch (Exception $e) {
-    // エラー発生時の処理
-    $chatGptOutput = $handler->handleError($e);
-}
-
-// API応答の生成と送信
-$handler->createResponse($chatGptOutput, $callback);
 ?>
