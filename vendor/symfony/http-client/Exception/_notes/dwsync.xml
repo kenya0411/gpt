@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="ClientException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="EventSourceException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="HttpExceptionTrait.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="InvalidArgumentException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="JsonException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="RedirectionException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="ServerException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="TimeoutException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="TransportException.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+</dwsync>

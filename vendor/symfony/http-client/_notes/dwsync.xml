@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="AmpHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="AsyncDecoratorTrait.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="CachingHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="CHANGELOG.md" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="CurlHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="composer.json" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="DecoratorTrait.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="EventSourceHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="HttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="HttpClientTrait.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="HttplugClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="HttpOptions.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="LICENSE" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="MockHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="NativeHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="NoPrivateNetworkHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="Psr18Client.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="README.md" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="RetryableHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="ScopingHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="TraceableHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+<file name="UriTemplateHttpClient.php" server="solution2014.xsrv.jp" local="133578481660000000" remote="133621349400000000" Dst="0" />
+</dwsync>
