@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="BatchFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="BatchRepositoryFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="BusFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="ChainedBatchTruthTest.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="EventFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="Fake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="MailFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="NotificationFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="PendingBatchFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="PendingMailFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="PendingChainFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+<file name="QueueFake.php" server="solution2014.xsrv.jp" local="133603112300000000" remote="133692808800000000" Dst="0" />
+</dwsync>

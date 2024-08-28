@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="BadComparisonUnitException.php" server="solution2014.xsrv.jp" local="133621388609199261" remote="133692808800000000" Dst="0" />
+<file name="BadFluentConstructorException.php" server="solution2014.xsrv.jp" local="133621388609199261" remote="133692808800000000" Dst="0" />
+<file name="BadFluentSetterException.php" server="solution2014.xsrv.jp" local="133621388609209270" remote="133692808800000000" Dst="0" />
+<file name="BadMethodCallException.php" server="solution2014.xsrv.jp" local="133621388609219249" remote="133692808800000000" Dst="0" />
+<file name="EndLessPeriodException.php" server="solution2014.xsrv.jp" local="133621388609229219" remote="133692808800000000" Dst="0" />
+<file name="Exception.php" server="solution2014.xsrv.jp" local="133621388609239194" remote="133692808800000000" Dst="0" />
+<file name="ImmutableException.php" server="solution2014.xsrv.jp" local="133621388609239194" remote="133692808800000000" Dst="0" />
+<file name="InvalidArgumentException.php" server="solution2014.xsrv.jp" local="133621388609289060" remote="133692808800000000" Dst="0" />
+<file name="InvalidCastException.php" server="solution2014.xsrv.jp" local="133621388609289060" remote="133692808800000000" Dst="0" />
+<file name="InvalidDateException.php" server="solution2014.xsrv.jp" local="133621388609443796" remote="133692808800000000" Dst="0" />
+<file name="InvalidFormatException.php" server="solution2014.xsrv.jp" local="133621388609453766" remote="133692808800000000" Dst="0" />
+<file name="InvalidIntervalException.php" server="solution2014.xsrv.jp" local="133621388609453766" remote="133692808800000000" Dst="0" />
+<file name="InvalidPeriodDateException.php" server="solution2014.xsrv.jp" local="133621388609473719" remote="133692808800000000" Dst="0" />
+<file name="InvalidPeriodParameterException.php" server="solution2014.xsrv.jp" local="133621388609473719" remote="133692808800000000" Dst="0" />
+<file name="InvalidTimeZoneException.php" server="solution2014.xsrv.jp" local="133621388609493670" remote="133692808800000000" Dst="0" />
+<file name="InvalidTypeException.php" server="solution2014.xsrv.jp" local="133621388609513626" remote="133692808800000000" Dst="0" />
+<file name="NotACarbonClassException.php" server="solution2014.xsrv.jp" local="133621388609513626" remote="133692808800000000" Dst="0" />
+<file name="NotAPeriodException.php" server="solution2014.xsrv.jp" local="133621388609543536" remote="133692808800000000" Dst="0" />
+<file name="OutOfRangeException.php" server="solution2014.xsrv.jp" local="133621388609573458" remote="133692808800000000" Dst="0" />
+<file name="NotLocaleAwareException.php" server="solution2014.xsrv.jp" local="133621388609553515" remote="133692808800000000" Dst="0" />
+<file name="ParseErrorException.php" server="solution2014.xsrv.jp" local="133621388609738825" remote="133692808800000000" Dst="0" />
+<file name="RuntimeException.php" server="solution2014.xsrv.jp" local="133621388609748832" remote="133692808800000000" Dst="0" />
+<file name="UnitException.php" server="solution2014.xsrv.jp" local="133621388609768780" remote="133692808800000000" Dst="0" />
+<file name="UnitNotConfiguredException.php" server="solution2014.xsrv.jp" local="133621388609778754" remote="133692808800000000" Dst="0" />
+<file name="UnknownGetterException.php" server="solution2014.xsrv.jp" local="133621388609798703" remote="133692808800000000" Dst="0" />
+<file name="UnknownMethodException.php" server="solution2014.xsrv.jp" local="133621388609808674" remote="133692808800000000" Dst="0" />
+<file name="UnknownSetterException.php" server="solution2014.xsrv.jp" local="133621388609938327" remote="133692808800000000" Dst="0" />
+<file name="UnknownUnitException.php" server="solution2014.xsrv.jp" local="133621388609958271" remote="133692808800000000" Dst="0" />
+<file name="UnreachableException.php" server="solution2014.xsrv.jp" local="133621388609958271" remote="133692808800000000" Dst="0" />
+</dwsync>

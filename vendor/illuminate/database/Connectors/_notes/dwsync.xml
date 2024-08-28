@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="ConnectionFactory.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="Connector.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="ConnectorInterface.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MySqlConnector.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="PostgresConnector.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="SQLiteConnector.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="SqlServerConnector.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+</dwsync>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="ExceptionInterface.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="InvalidArgumentException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="InvalidResourceException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="LogicException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="MissingRequiredOptionException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="IncompleteDsnException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="NotFoundResourceException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="ProviderException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="ProviderExceptionInterface.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="RuntimeException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="UnsupportedSchemeException.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+</dwsync>

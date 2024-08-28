@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="BelongsTo.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="BelongsToMany.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="HasMany.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="HasManyThrough.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="HasOne.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="HasOneOrMany.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="HasOneThrough.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MorphMany.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MorphOne.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MorphOneOrMany.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MorphPivot.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MorphTo.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="MorphToMany.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="Pivot.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+<file name="Relation.php" server="solution2014.xsrv.jp" local="133600368360000000" remote="133692808200000000" Dst="0" />
+</dwsync>

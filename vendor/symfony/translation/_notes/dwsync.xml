@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CatalogueMetadataAwareInterface.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="CHANGELOG.md" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="composer.json" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="DataCollectorTranslator.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="IdentityTranslator.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="LICENSE" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="LocaleSwitcher.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="LoggingTranslator.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="MessageCatalogue.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="MessageCatalogueInterface.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="MetadataAwareInterface.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="PseudoLocalizationTranslator.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="README.md" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="TranslatableMessage.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="Translator.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="TranslatorBag.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+<file name="TranslatorBagInterface.php" server="solution2014.xsrv.jp" local="133615829480000000" remote="133692809400000000" Dst="0" />
+</dwsync>
