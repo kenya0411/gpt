@@ -40,7 +40,8 @@ class OpenAIEmbeddingProcessor {
         // JSONデータの取得
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
-
+         file_put_contents(__DIR__. "/../../log/embeddings.csv", var_export($data,true ));
+        
         // 埋め込みの生成
         $embeddings = [];
         foreach ($data as $entry) {
