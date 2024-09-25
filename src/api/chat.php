@@ -153,7 +153,13 @@ $response = [
         [
             'type' => 'text',
             'value' => trim($output)
-        ]
+        ],                [
+                    'type' => 'option',
+                    'options' => [
+                        ['label' => '詳細を見る', 'value' => 'details'],
+                        ['label' => 'お問い合わせ', 'value' => 'contact']
+                    ]
+                ]
     ]
 ];
 

@@ -7,3 +7,4 @@ log/return.log
 .env
 log/best_match.log
 log/embeddings.log
+src/api/_notes/dwsync.xml
