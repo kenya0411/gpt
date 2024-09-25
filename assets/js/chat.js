@@ -4,7 +4,10 @@ const chatux = new ChatUx();
 const botPhotoUrl = 'https://riversun.github.io/chatbot/bot_icon_operator.png'; // または任意の画像URL
 
 const initParam = {
-  renderMode: 'auto',
+    //auto:PCとスマホを自動判定、pc:強制的にPCモード、mobile:強制的にスマホモード
+    renderMode: 'auto',
+    //true:チャットUIが開いたら、チャット起動ボタンを消す(pcモードのみ有効)
+    // buttonOffWhenOpenFrame: true,
   api: {
     endpoint: './src/api/chat.php',
     method: 'GET',
@@ -25,4 +28,5 @@ const initParam = {
 };
 
 chatux.init(initParam);
-chatux.start(true);
+// chatux.start(true);
+chatux.start(false);
