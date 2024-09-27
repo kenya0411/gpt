@@ -21,7 +21,7 @@ const initParam = {
   window: {
     title: 'チャットボット',
     infoUrl: 'https://github.com/riversun/chatux'
-  }
+  },
 };
 
 chatux.init(initParam);
@@ -29,3 +29,7 @@ chatux.init(initParam);
 chatux.start(true);
 
 
+// 右クリックを有効にするためのイベントリスナー
+document.addEventListener('contextmenu', function (event) {
+  event.stopPropagation(); // イベントの伝播を停止して右クリックメニューが表示されるようにする
+}, true);

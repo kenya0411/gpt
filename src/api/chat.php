@@ -23,7 +23,11 @@ class OpenAIApi {
         $questionEmbedding = $this->getEmbedding($user_question); // ユーザーの質問の埋め込みベクトルを取得
 
         // 類似度が最も高い埋め込みデータとそのスコア、タイトルを取得
-        [$bestScore, $bestMatch, $bestMatchTitle] = $this->findBestMatch($embeddingsData, $questionEmbedding);
+        // [$bestScore, $bestMatch, $bestMatchTitle] = $this->findBestMatch($embeddingsData, $questionEmbedding);
+
+    // 類似度が最も高い埋め込みデータとそのスコア、タイトル、関連質問を取得
+    [$bestScore, $bestMatch, $bestMatchTitle, $relatedQuestions] = $this->findBestMatch($embeddingsData, $questionEmbedding);
+
 
         // file_put_contents('../../log/best_match.log', $bestScore); // 類似度スコアをログに記録
 
@@ -46,7 +50,8 @@ class OpenAIApi {
         // file_put_contents('../../log/return.log', $bestMatchTitle);
 
         // 生成された回答を返す
-        return $gptResponse->choices[0]->message->content;
+        // return $gptResponse->choices[0]->message->content;
+        return [$gptResponse->choices[0]->message->content, $relatedQuestions];
     }
 
     // 埋め込みデータをログファイルから読み込む
@@ -70,6 +75,7 @@ class OpenAIApi {
         $bestMatch = "";
         $bestMatchTitle = "";
         $similarities = [];
+         $relatedQuestions = []; // 修正: ループの外で宣言
 
         foreach ($embeddingsData as $id => $data) {
             $textEmbedding = $data['embedding'];
@@ -90,10 +96,18 @@ class OpenAIApi {
 
         // 最も類似度が高いIDを取得
         $bestMatchId = array_search(max($similarities), $similarities);
+
+            // 修正: 最も類似度が高い要素の関連質問を取得
+    $relatedQuestions = [
+        $embeddingsData[$bestMatchId]['related_question1'] ?? '',
+        $embeddingsData[$bestMatchId]['related_question2'] ?? '',
+        $embeddingsData[$bestMatchId]['related_question3'] ?? ''
+    ];
         return [
             $similarities[$bestMatchId], // 類似度
             $embeddingsData[$bestMatchId]['content'], // コンテンツ
-            $embeddingsData[$bestMatchId]['title'] // タイトル
+            $embeddingsData[$bestMatchId]['title'], // タイトル
+             $relatedQuestions // 関連質問
         ];
     }
 
@@ -141,28 +155,56 @@ $text = isset($_GET['text']) ? filter_var($_GET['text'], FILTER_SANITIZE_STRING)
 // OpenAIApi クラスのインスタンスを作成
 $openaiApi = new OpenAIApi();
 
+// // 応答を取得
+// $output = $openaiApi->getResponse($text);
+
 // 応答を取得
-$output = $openaiApi->getResponse($text);
+list($output, $relatedQuestions) = $openaiApi->getResponse($text);
+        file_put_contents('../../log/return.log', $relatedQuestions);
+
 
 // 改行コードを挿入 (<br> タグ)
 $output = nl2br($output);
 
+// // 応答データを作成
+// $response = [
+//     'output' => [
+//         [
+//             'type' => 'text',
+//             'value' => trim($output)
+//         ],                [
+//                     'type' => 'option',
+//                     'options' => [
+//                         ['label' => '詳細を見る', 'value' => 'details'],
+//                         ['label' => 'お問い合わせ', 'value' => 'contact']
+//                     ]
+//                 ]
+//     ]
+// ];
 // 応答データを作成
 $response = [
     'output' => [
         [
             'type' => 'text',
             'value' => trim($output)
-        ],                [
-                    'type' => 'option',
-                    'options' => [
-                        ['label' => '詳細を見る', 'value' => 'details'],
-                        ['label' => 'お問い合わせ', 'value' => 'contact']
-                    ]
-                ]
+        ]
     ]
 ];
 
+// 関連質問が存在する場合のみオプションを追加
+$options = [];
+foreach ($relatedQuestions as $question) {
+    if ($question) {
+        $options[] = ['label' => $question, 'value' => $question];
+    }
+}
+
+if (!empty($options)) {
+    $response['output'][] = [
+        'type' => 'option',
+        'options' => $options
+    ];
+}
 $callback = isset($_GET['callback']) ? filter_var($_GET['callback'], FILTER_SANITIZE_STRING) : '';
 
 // JSONP形式で応答する場合

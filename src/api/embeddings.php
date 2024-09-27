@@ -40,8 +40,7 @@ class OpenAIEmbeddingProcessor {
         // JSONデータの取得
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
-        file_put_contents(__DIR__. "/../../log/test.log", var_export($data,true ));
-        
+        array_shift($data); // 1行目をスキップ
         // 埋め込みの生成
         $embeddings = [];
         foreach ($data as $entry) {
@@ -70,8 +69,20 @@ class OpenAIEmbeddingProcessor {
         $title = $entry[0];
         $category = isset($entry[2]) ? $entry[2] : null;
 
+        
+        // 関連質問1～3の取得
+        $relatedQuestion1 = isset($entry[3]) ? $entry[3] : null;
+        $relatedQuestion2 = isset($entry[4]) ? $entry[4] : null;
+        $relatedQuestion3 = isset($entry[5]) ? $entry[5] : null;
+
+
         // 埋め込み対象のテキストを作成
-        $textToEmbed = $content . ' ' . $title . ($category ? ' ' . $category : '');
+        // $textToEmbed = $content . ' ' . $title . ($category ? ' ' . $category : '');
+        $textToEmbed = $content . ' ' . $title . ($category ? ' ' . $category : '') . 
+            ($relatedQuestion1 ? ' ' . $relatedQuestion1 : '') .
+            ($relatedQuestion2 ? ' ' . $relatedQuestion2 : '') .
+            ($relatedQuestion3 ? ' ' . $relatedQuestion3 : '');
+
 
         try {
             // OpenAI APIを呼び出して埋め込みを生成
@@ -86,7 +97,10 @@ class OpenAIEmbeddingProcessor {
                     'embedding' => $response->embeddings[0]->embedding,
                     'content' => $content,
                     'title' => $title,
-                    'category' => $category
+                    'category' => $category,
+                    'related_question1' => $relatedQuestion1,
+                    'related_question2' => $relatedQuestion2,
+                    'related_question3' => $relatedQuestion3
                 ];
             }
         } catch (\Exception $e) {
