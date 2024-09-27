@@ -57,6 +57,8 @@ class OpenAIApi {
     // 埋め込みデータをログファイルから読み込む
     private function readEmbeddingsFromLog() {
         $content = file_get_contents($this->logFile); // ログファイルの内容を読み込む
+                file_put_contents('../../log/return.log', $content);
+
         return json_decode($content, true) ?? []; // JSON を配列に変換 (失敗時は空の配列)
     }
 
@@ -160,7 +162,6 @@ $openaiApi = new OpenAIApi();
 
 // 応答を取得
 list($output, $relatedQuestions) = $openaiApi->getResponse($text);
-        file_put_contents('../../log/return.log', $relatedQuestions);
 
 
 // 改行コードを挿入 (<br> タグ)
